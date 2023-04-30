@@ -4,7 +4,8 @@ import sys
 
 class Game:
     def __init__(self):
-        pg.init
+        pg.init()
+        pg.font.init()
         self.WINDOW_SIZE = 700
         self.TILE_SIZE = 35
         self.screen = pg.display.set_mode([self.WINDOW_SIZE] * 2)
@@ -24,13 +25,19 @@ class Game:
     def update(self):
         self.snake.update()
         pg.display.flip()
-        self.clock.tick(60)
+        self.clock.tick(60) 
 
     def draw(self):
         self.screen.fill('black')
         self.draw_grid()
         self.snake.draw()
         self.food.draw()
+
+        # Set up the font object
+        font = pg.font.Font(None, 36)
+        # Draw the score to the screen
+        score_text = font.render(f'Score: {self.snake.score}', True, (255, 255, 255))
+        self.screen.blit(score_text, (10, 10)) 
 
     def check_event(self):
         for event in pg.event.get():
@@ -39,7 +46,7 @@ class Game:
                 sys.exit()
             
             # Snake control
-            self.snake.control(event)
+            self.snake.control(event) 
 
     # Main game loop
     def run(self):

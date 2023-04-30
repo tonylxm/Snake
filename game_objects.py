@@ -14,6 +14,7 @@ class Snake:
         self.step_delay = 100   # milliseconds
         self.time = 0
         self.length = 1
+        self.score = 1
         self.segments = []
         self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}  # directional permissions so opposite movement is disallowed
     
@@ -59,6 +60,7 @@ class Snake:
         if self.rect.center == self.game.food.rect.center:
             self.game.food.rect.center = self.get_random_position()
             self.length += 1    # Snake grows bigger
+            self.score += 1     # Score increases by 1
 
     def check_self_eating(self):
         if len(self.segments) != len(set(segment.center for segment in self.segments)):
@@ -71,7 +73,6 @@ class Snake:
             # Snake growing mechanism
             self.segments.append(self.rect.copy())  # Write next position to segment list
             self.segments = self.segments[-self.length:]    # Slice the segment list along the snake length
-
 
     def update(self):
         self.check_self_eating()
