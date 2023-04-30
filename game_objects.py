@@ -13,6 +13,8 @@ class Snake:
         self.direction = vec2(0, 0)
         self.step_delay = 100   # Miliseconds
         self.time = 0
+        self.length = 1
+        self.segments = []
     
     # Fix time delay problem
     def delta_time(self):
@@ -40,22 +42,34 @@ class Snake:
     # get random coordinates on grid to place snake
     def get_random_position(self):
         return [randrange(self.size // 2, self.game.WINDOW_SIZE - self.size // 2, self.size)] * 2
+    
+    def check_borders(self):
+        if self.rect.left < 0 or self.rect.right > self.game.WINDOW_SIZE:
+            self.game.new_game()
+        if self.rect.top < 0 or self.rect.bottom > self.game.WINDOW_SIZE:
+            self.game.new_game()
 
     # Compare position of snake to position of food. If they are equal, the snake eats the food --> food goes to another random position
     def check_food(self):
         if self.rect.center == self.game.food.rect.center:
             self.game.food.rect.center = self.get_random_position()
+            self.length += 1
 
     def move(self):
         if self.delta_time():
             self.rect.move_ip(self.direction)
 
+            self.segments.append(self.rect.copy())
+            self.segments = self.segments[-self.length:]
+
+
     def update(self):
+        self.check_borders()
         self.check_food()
         self.move()
 
     def draw(self):
-        pg.draw.rect(self.game.screen, 'green', self.rect)
+        [pg.draw.rect(self.game.screen, 'green', segment) for segment in self.segments]
 
 class Food:
     def __init__(self, game):
