@@ -24,7 +24,7 @@ class Game:
     def update(self):
         self.snake.update()
         pg.display.flip()
-        self.clock.tick(10)
+        self.clock.tick(60)
 
     def draw(self):
         self.screen.fill('black')
