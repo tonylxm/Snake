@@ -1,4 +1,5 @@
 import pygame as pg
+from game_objects import *
 import sys
 
 class Game:
@@ -8,6 +9,7 @@ class Game:
         self.TILE_SIZE = 50
         self.screen = pg.display.set_mode([self.WINDOW_SIZE] * 2)
         self.clock = pg.time.Clock()
+        self.new_game()
 
     def draw_grid(self):
         for x in range(0, self.WINDOW_SIZE, self.TILE_SIZE):
@@ -16,21 +18,28 @@ class Game:
             pg.draw.line(self.screen, [50] * 3, (0, y), (self.WINDOW_SIZE, y))
         
     def new_game(self):
-        pass
+        self.snake = Snake(self)
+        self.food = Food(self)
 
     def update(self):
+        self.snake.update()
         pg.display.flip()
-        self.clock.tick(60)
+        self.clock.tick(10)
 
     def draw(self):
         self.screen.fill('black')
         self.draw_grid()
+        self.snake.draw()
+        self.food.draw()
 
     def check_event(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+            
+            # Snake control
+            self.snake.control(event)
 
     # Main game loop
     def run(self):
