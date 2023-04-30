@@ -11,10 +11,11 @@ class Snake:
         self.rect = pg.rect.Rect([0, 0, game.TILE_SIZE - 2, game.TILE_SIZE - 2])
         self.rect.center = self.get_random_position()
         self.direction = vec2(0, 0)
-        self.step_delay = 100   # Miliseconds
+        self.step_delay = 100   # milliseconds
         self.time = 0
         self.length = 1
         self.segments = []
+        self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}  # directional permissions so opposite movement is disallowed
     
     # Fix time delay problem
     def delta_time(self):
@@ -27,17 +28,21 @@ class Snake:
     # Arrow Key Movement of Snake
     def control(self, event):
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_UP:
+            if event.key == pg.K_w and self.directions[pg.K_w]:
                 self.direction = vec2(0, -self.size)
+                self.directions = {pg.K_w: 1, pg.K_s: 0, pg.K_a: 1, pg.K_d: 1}
 
-            if event.key == pg.K_DOWN:
+            if event.key == pg.K_s and self.directions[pg.K_s]:
                 self.direction = vec2(0, self.size)
+                self.directions = {pg.K_w: 0, pg.K_s: 1, pg.K_a: 1, pg.K_d: 1}
 
-            if event.key == pg.K_LEFT:
+            if event.key == pg.K_a and self.directions[pg.K_a]:
                 self.direction = vec2(-self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 1, pg.K_d: 0}
 
-            if event.key == pg.K_RIGHT:
+            if event.key == pg.K_d and self.directions[pg.K_d]:
                 self.direction = vec2(self.size, 0)
+                self.directions = {pg.K_w: 1, pg.K_s: 1, pg.K_a: 0, pg.K_d: 1}
 
     # get random coordinates on grid to place snake
     def get_random_position(self):
