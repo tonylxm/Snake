@@ -53,17 +53,23 @@ class Snake:
     def check_food(self):
         if self.rect.center == self.game.food.rect.center:
             self.game.food.rect.center = self.get_random_position()
-            self.length += 1
+            self.length += 1    # Snake grows bigger
+
+    def check_self_eating(self):
+        if len(self.segments) != len(set(segment.center for segment in self.segments)):
+            self.game.new_game()
 
     def move(self):
         if self.delta_time():
             self.rect.move_ip(self.direction)
 
-            self.segments.append(self.rect.copy())
-            self.segments = self.segments[-self.length:]
+            # Snake growing mechanism
+            self.segments.append(self.rect.copy())  # Write next position to segment list
+            self.segments = self.segments[-self.length:]    # Slice the segment list along the snake length
 
 
     def update(self):
+        self.check_self_eating()
         self.check_borders()
         self.check_food()
         self.move()
